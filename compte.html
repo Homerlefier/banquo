@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comptes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        /* Total des comptes */
+        .total-section {
+            text-align: left;
+            margin-bottom: 15px;
+            color: #11A984;
+        }
+
+        .total-amount {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        /* Navigation en haut */
+        .nav {
+            display: flex;
+            justify-content: space-around;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+         /* BOUTONS SECTIONS */
+    .sections {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .section-button {
+      flex: 1;
+      padding: 12px;
+      margin: 5px;
+      text-align: center;
+      background-color: #11A984;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .section-button:hover {
+      background-color: #0e8e6e;
+    }
+
+        .nav button {
+            background: none;
+            border: none;
+            color: #004d40;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 8px 12px;
+        }
+
+        .nav button.active {
+            background: #004d40;
+            color: white;
+            border-radius: 20px;
+        }
+
+        /* Cartes des comptes */
+        .account {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .account h3 {
+            margin: 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .account p {
+            margin: 5px 0;
+        }
+
+        .balance {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .positive {
+            color: #11A984;
+        }
+
+        .negative {
+            color: red;
+        }
+
+        /* Menu fixe en bas */
+        .bottom-menu {
+            display: flex;
+            justify-content: space-around;
+            background: white;
+            padding: 15px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 400px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0px -2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .bottom-menu div {
+            text-align: center;
+            font-size: 14px;
+            color: gray;
+        }
+
+        .bottom-menu .active {
+            color: #004d40;
+            font-weight: bold;
+        }
+        .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 50px;
+      background-color: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-top: 1px solid #ccc;
+      z-index: 1000;
+    }
+    .bottom-nav a {
+      color: #333;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 10px;
+    }
+    .bottom-nav a:hover {
+      text-decoration: underline;
+    }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Section Total -->
+        <div class="total-section">
+            <p class="total-amount" id="totalBalance">0,00 €</p>
+            <p>Total comptes</p>
+        </div>
+
+        <!-- BOUTONS SECTIONS -->
+    <div class="sections">
+      <div class="section-button">Compte</div>
+      <div class="section-button">Épargne</div>
+      <div class="section-button">Crédits</div>
+      <div class="section-button">Assurance</div>
+    </div>
+
+        <!-- Liste des comptes -->
+        <div id="accountsContainer">
+            <!-- Les comptes seront générés ici -->
+        </div>
+    </div>
+
+    <!-- Menu fixe en bas -->
+    <div class="bottom-nav">
+    <a href="index.html">Accueil</a>
+    <a href="compte.html">Comptes</a>
+    <a href="#" id="contactButton">Contact</a>
+    <a href="virement.html">Virement</a>
+    <a href="#">Menu</a>
+  </div>
+
+    <script>
+        function generateAccounts() {
+            const accountsData = [
+                { name: "Compte de dépôt", owner: "Nino Vichy", number: "6712894327", balance: 4697.39 },
+                { name: "Compte joint", owner: "Nino Vichy", number: "98863214579", balance: -120.50 },
+                { name: "Compte Mozaïc", owner: "Elouan Morvan", number: "27648134285", subText: "Sous administration légale", balance: 168.00 }
+            ];
+
+            const accountsContainer = document.getElementById("accountsContainer");
+            accountsContainer.innerHTML = ""; // Vide le contenu existant
+
+            let totalBalance = 0;
+
+            accountsData.forEach(account => {
+                const balance = account.balance;
+                const balanceClass = balance < 0 ? "negative" : "positive";
+                totalBalance += balance;
+
+                const accountHTML = `
+                    <div class="account">
+                        <h3>${account.owner}</h3>
+                        ${account.subText ? `<p style="color: gray; font-size: 12px;">${account.subText}</p>` : ""}
+                        <p><strong>${account.name}</strong></p>
+                        <p style="font-size: 12px; color: gray;">${account.number}</p>
+                        <p class="balance ${balanceClass}">${balance.toLocaleString('fr-FR', { minimumFractionDigits: 2 })} €</p>
+                    </div>
+                `;
+
+                accountsContainer.innerHTML += accountHTML;
+            });
+
+            // Mettre à jour le total
+            document.getElementById("totalBalance").innerText = totalBalance.toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + " €";
+        }
+
+        // Générer les comptes au chargement de la page
+        window.onload = generateAccounts;
+    </script>
+
+</body>
+</html>
